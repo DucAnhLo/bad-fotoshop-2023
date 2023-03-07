@@ -1,4 +1,4 @@
-/**
+/**®
  * This is the main class for the Fotoshop application
  * 
  * @author Joseph Williams

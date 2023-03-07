@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import javax.imageio.ImageIO;
 
 /**
@@ -39,6 +41,16 @@ public class Editor {
         filter3 = null;
         filter4 = null;
     }
+
+    private HashMap<String, Commands> commands = new HashMap<String, Commands>();
+    OpenCommand openCommand = null;
+    SaveCommand saveCommand = null;
+    public void setUpCommand(){
+        commands.put("open", openCommand);
+        commands.put("save", saveCommand);
+    }
+
+
 
     /**
      * Create the editor and initialise its parser.
@@ -97,6 +109,8 @@ public class Editor {
      * @return true If the command ends the editing session, false otherwise.
      */
     private boolean processCommand(Command command) {
+        openCommand = new OpenCommand(command);
+        setUpCommand();
         boolean wantToQuit = false;
 
         if (command.isUnknown()) {
@@ -108,9 +122,9 @@ public class Editor {
         if (commandWord == "help") {
             printHelp();
         } else if (commandWord.equals("open")) {
-            open(command);
+            commands.get("open").execute();
         } else if (commandWord.equals("save")) {
-            save(command);
+            commands.get("save").execute();
         } else if (commandWord.equals("mono")) {
             mono(command);
         } else if (commandWord.equals("rot90")) {
@@ -133,7 +147,7 @@ public class Editor {
      * Print out some help information. Here we print some useless, cryptic
      * message and a list of the command words.
      */
-    private void printHelp() {
+    void printHelp() {
         System.out.println("You are using Fotoshop.");
         System.out.println();
         System.out.println("Your command words are:");
@@ -157,32 +171,33 @@ public class Editor {
     }
 
 
+
     /**
      * "open" was entered. Open the file given as the second word of the command
      * and use as the current image. 
      * @param command the command given.
      */
-    private void open(Command command) {
-        if (!command.hasSecondWord()) {
-            // if there is no second word, we don't know what to open...
-            System.out.println("open what?");
-            return ;
-        }
-  
-        String inputName = command.getSecondWord();
-        ColorImage img = loadImage(inputName);
-        if (img == null) {
-            printHelp();
-        } else {
-            currentImage = img;
-            name = inputName;
-            filter1 = null;
-            filter2 = null;
-            filter3 = null;
-            filter4 = null;
-            System.out.println("Loaded " + name);
-        }
-    }
+//    private void open(Command command) {
+//        if (!command.hasSecondWord()) {
+//            // if there is no second word, we don't know what to open...
+//            System.out.println("open what?");
+//            return ;
+//        }
+//
+//        String inputName = command.getSecondWord();
+//        ColorImage img = loadImage(inputName);
+//        if (img == null) {
+//            printHelp();
+//        } else {
+//            currentImage = img;
+//            name = inputName;
+//            filter1 = null;
+//            filter2 = null;
+//            filter3 = null;
+//            filter4 = null;
+//            System.out.println("Loaded " + name);
+//        }
+//    }
 
     /**
      * "save" was entered. Save the current image to the file given as the 
@@ -199,7 +214,7 @@ public class Editor {
             System.out.println("save where?");
             return ;
         }
-  
+
         String outputName = command.getSecondWord();
         try {
             File outputFile = new File(outputName);
@@ -219,12 +234,12 @@ public class Editor {
      * 
      *
      */
-//    void checkStatus(int statusCode) {
-//        if(statusCode == -1) {
-//            System.err.println("FATAL ERROR!");
-//            System.exit(0);     
-//        }
-//    }
+    void checkStatus(int statusCode) {
+        if(statusCode == -1) {
+            System.err.println("FATAL ERROR!");
+            System.exit(0);
+        }
+    }
 
     /**
      * "look" was entered. Report the status of the work bench. 
@@ -293,7 +308,6 @@ public class Editor {
             System.out.println("Filter pipeline exceeded");
             return;
         }
-        
         // R90 = [0 -1, 1 0] rotates around origin
         // (x,y) -> (-y,x)
         // then transate -> (height-y, x)
@@ -373,4 +387,7 @@ public class Editor {
             return true;  // signal that we want to quit
         }
     }
+
+
+
 }
