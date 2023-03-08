@@ -3,14 +3,15 @@ import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
-public class SaveCommand implements Commands{
+public class SaveCommand extends Command implements Commands{
 
     private String filename;
     private ColorImage currentImage;
 
-    public SaveCommand(String filename, ColorImage currentImage) {
-        this.filename = filename;
-        this.currentImage = currentImage;
+    public SaveCommand(Command command) {
+        super(command.getCommandWord(), command.getSecondWord(), command.getThirdWord());
+        this.filename = command.getSecondWord();
+        this.currentImage = loadImage(filename);
     }
 
     @Override
@@ -34,6 +35,8 @@ public class SaveCommand implements Commands{
             printHelp();
         }
     }
+
+
 
     private void printHelp() {
         System.out.println("You are using Fotoshop.");

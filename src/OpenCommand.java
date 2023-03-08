@@ -2,11 +2,12 @@ import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
 
-public class OpenCommand implements Commands {
+public class OpenCommand extends Command implements Commands {
     private String filename;
     private ColorImage currImage;
 
     public OpenCommand(Command command) {
+        super(command.getCommandWord(), command.getSecondWord(), command.getThirdWord());
         this.filename = command.getSecondWord();
         this.currImage = loadImage(filename);
     }
@@ -29,16 +30,7 @@ public class OpenCommand implements Commands {
             System.out.println("Loaded " + editor.name);
         }
     }
-    private ColorImage loadImage(String name) {
-        ColorImage img = null;
-        try {
-            img = new ColorImage(ImageIO.read(new File(name)));
-        } catch (IOException e) {
-            System.out.println("Cannot find image file, " + name);
-            System.out.println("cwd is " + System.getProperty("user.dir"));
-        }
-        return img;
-    }
+
 
     private void printHelp() {
         System.out.println("You are using Fotoshop.");

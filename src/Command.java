@@ -1,3 +1,7 @@
+import javax.imageio.ImageIO;
+import java.io.File;
+import java.io.IOException;
+
 public class Command
 {
     private String commandWord;
@@ -70,6 +74,16 @@ public class Command
     public boolean hasThirdWord()
     {
         return (thirdWord != null);
+    }
+    public ColorImage loadImage(String name) {
+        ColorImage img = null;
+        try {
+            img = new ColorImage(ImageIO.read(new File(name)));
+        } catch (IOException e) {
+            System.out.println("Cannot find image file, " + name);
+            System.out.println("cwd is " + System.getProperty("user.dir"));
+        }
+        return img;
     }
 }
 
