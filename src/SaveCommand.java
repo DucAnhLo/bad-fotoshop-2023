@@ -35,9 +35,6 @@ public class SaveCommand extends Command implements Commands{
             printHelp();
         }
     }
-
-
-
     private void printHelp() {
         System.out.println("You are using Fotoshop.");
         System.out.println();

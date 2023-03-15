@@ -45,11 +45,11 @@ public class Editor {
     private HashMap<String, Commands> commands = new HashMap<String, Commands>();
 
     public void setUpCommand(Command command){
-        commands.put("open", new OpenCommand(command));
-        commands.put("save", new SaveCommand(command));
-        commands.put("look", new LookCommand(command));
-        commands.put("mono", new MonoCommand(command));
-        commands.put("rot90", new Rot90Command(command));
+         commands.put("open", new OpenCommand(command));
+         commands.put("save", new SaveCommand(command));
+         commands.put("look", new LookCommand(command));
+         commands.put("mono", new MonoCommand(command));
+         commands.put("rot90", new Rot90Command(command));
     }
 
 
@@ -71,22 +71,28 @@ public class Editor {
         // execute them until the editing session is over.
         boolean finished = false;
         while (!finished) {
-            Command command = parser.getCommand();
-            finished = processCommand(command);
+            try{
+                Command command = parser.getCommand();
+                finished = processCommand(command);
+            }catch (Exception e) {
+                return;
+            }
         }
-        System.out.println("Thank you for using Fotoshop.  Good bye.");
-        System.exit(0);
+        if(finished){
+            System.out.println("Thank you for using Fotoshop.  Good bye.");
+        }
+        //System.exit(0);
     }
 
     /**
      * Print out the opening message for the user.
      */
     private void printWelcome() {
-        System.out.println();
+        System.out.println("\n");
         System.out.println("Welcome to Fotoshop!");
         System.out.println("Fotoshop is an amazing new, image editing tool.");
         System.out.println("Type 'help' if you need help.");
-        System.out.println();
+        System.out.println("\n");
         System.out.println("The current image is " + name);
         System.out.print("Filters applied: ");
         if (filter1 != null) {
@@ -120,9 +126,13 @@ public class Editor {
         }
 
         String commandWord = command.getCommandWord();
-        if (commandWord == "help") {
+        if (commandWord.equals("help")) {
             printHelp();
-        }else {
+        }
+        else if (commandWord.equals("quit")) {
+           wantToQuit = quit(command);
+        }
+        else {
             Commands inputtedCommand = commands.get(commandWord);
             if(inputtedCommand != null){
                 inputtedCommand.execute();

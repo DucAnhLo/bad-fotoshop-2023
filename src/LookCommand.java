@@ -14,7 +14,6 @@ public class LookCommand extends Command implements Commands {
         this.currentImage = loadImage(name);
 
     }
-
     public void look(){
         this.editor = new Editor(Constants.filter1,Constants.filter2,Constants.filter3,Constants.filter4);
         System.out.println("The current image is " + name);
@@ -31,11 +30,7 @@ public class LookCommand extends Command implements Commands {
         if (editor.filter4 != null) {
             System.out.print(editor.filter4 + " ");
         }
-        System.out.println();
     }
-
-
-
     @Override
     public void execute() {
         look();

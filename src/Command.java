@@ -79,7 +79,7 @@ public class Command
         ColorImage img = null;
         try {
             img = new ColorImage(ImageIO.read(new File(name)));
-        } catch (IOException e) {
+        } catch (Exception e) {
             System.out.println("Cannot find image file, " + name);
             System.out.println("cwd is " + System.getProperty("user.dir"));
         }
